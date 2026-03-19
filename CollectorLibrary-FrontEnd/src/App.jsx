@@ -1,39 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
-import OtroButon from '../component/button'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "./assets/vite.svg";
+import heroImg from "./assets/hero.png";
+import "./App.css";
+import "./component/Modal.css"; //sirve para mejorar la apariencia del modal, puedes personalizarlo a tu gusto
+import Form from "./component/Form";
+//import OtroButon from "./component/button";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [formType, setFormType] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (type) => {
+    setFormType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setFormType("");
+  };
 
   return (
     <>
-      <OtroButon
-        Text="Mi Repo"
-        SiteRef="https://github.com/Dbeltran15/CollectorLibrary-FrontEnd.git"
-        IconRef="/icons.svg#github-icon"
-      />
-
       <section id="center">
         <div className="hero">
           <img src={heroImg} className="base" width="170" height="179" alt="" />
           <img src={reactLogo} className="framework" alt="React logo" />
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
+
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <h1>Dashboard</h1>
+          <p>Selecciona qué deseas crear</p>
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+
+        <div
+          style={{
+            display: "flex",
+            gap: "12px",
+            justifyContent: "center",
+            marginTop: "20px",
+            flexWrap: "wrap",
+          }}
         >
-          Count is {count}
-        </button>
+          <OtroButon
+            Text="Crear Book"
+            IconRef="/icons.svg#documentation-icon"
+            onClick={() => openModal("book")}
+          />
+
+          <OtroButon
+            Text="Crear Author"
+            IconRef="/icons.svg#social-icon"
+            onClick={() => openModal("author")}
+          />
+        </div>
       </section>
 
       <div className="ticks"></div>
@@ -43,70 +66,44 @@ function App() {
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#documentation-icon"></use>
           </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+          <h2>Acciones</h2>
+          <p>Presiona un botón para abrir el formulario en un popup.</p>
         </div>
+
         <div id="social">
           <svg className="icon" role="presentation" aria-hidden="true">
             <use href="/icons.svg#social-icon"></use>
           </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg className="button-icon" role="presentation" aria-hidden="true">
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
+          <h2>Estado</h2>
+          <p>
+            {isModalOpen
+              ? `Popup activo: ${formType === "book" ? "Book" : "Author"}`
+              : "No hay ningún popup abierto"}
+          </p>
         </div>
       </section>
 
       <div className="ticks"></div>
       <section id="spacer"></section>
+
+      {isModalOpen && (
+        <div className="overlay">
+          <div className="modal">
+            <div className="modal-header">
+              <h2 className="modal-title">
+                {formType === "book" ? "Crear Book" : "Crear Author"}
+              </h2>
+              <button className="close-btn" onClick={closeModal}>
+                X
+              </button>
+            </div>
+
+            <Form type={formType} onClose={closeModal} />
+          </div>
+        </div>
+      )}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
